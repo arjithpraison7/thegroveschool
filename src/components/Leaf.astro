@@ -1,0 +1,32 @@
+---
+// A peepal leaf, the tree in the school emblem. Used as a decorative motif.
+// The veins are cut out of the leaf with a mask, so they show the background behind and the leaf
+// reads correctly at any opacity, on light or dark sections.
+interface Props {
+  class?: string;
+  veins?: boolean;
+}
+const { class: className, veins = true } = Astro.props;
+const maskId = `leaf-${Math.random().toString(36).slice(2, 9)}`;
+const outline =
+  'M50 3C53 22 63 34 78 45C96 58 101 81 91 99C83 112 66 118 55 116C53 116 51 118 50 122C49 118 47 116 45 116C34 118 17 112 9 99C-1 81 4 58 22 45C37 34 47 22 50 3Z';
+---
+
+<svg class={className} viewBox="0 0 100 132" aria-hidden="true" focusable="false">
+  {
+    veins && (
+      <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="132">
+        <rect width="100" height="132" fill="#fff" />
+        <path
+          d="M50 118V26M50 58L70 46M50 58L30 46M50 78L80 64M50 78L20 64M50 97L76 87M50 97L24 87"
+          fill="none"
+          stroke="#000"
+          stroke-width="3"
+          stroke-linecap="round"
+        />
+      </mask>
+    )
+  }
+  <path fill="currentColor" d={outline} mask={veins ? `url(#${maskId})` : undefined}></path>
+  <path d="M50 119V131" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+</svg>

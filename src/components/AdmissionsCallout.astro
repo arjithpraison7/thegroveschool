@@ -1,0 +1,54 @@
+---
+import { ArrowRight, ArrowUpRight, Phone } from '@lucide/astro';
+import Leaf from './Leaf.astro';
+import { site } from '../data/site';
+import { url } from '../lib/url';
+
+interface Props {
+  /** Hide the "Admission details" link (on the admissions page itself). */
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const { open, year, formUrl } = site.admissions;
+---
+
+<div class="relative isolate overflow-hidden rounded-[2rem] bg-forest-900 px-6 py-10 text-white shadow-[var(--shadow-lift)] sm:px-10 md:py-12 lg:px-14">
+  <Leaf class="absolute -top-10 -right-8 -z-10 w-56 rotate-[24deg] text-leaf-500/25" />
+  <Leaf class="absolute right-40 -bottom-20 -z-10 hidden w-36 -rotate-[20deg] text-saffron-400/20 md:block" />
+  <div class="grid items-center gap-8 md:grid-cols-[1fr_auto]">
+    <div>
+      <p class="eyebrow text-saffron-300">Admissions {year}</p>
+      <h2 class="mt-2 text-3xl font-semibold text-white sm:text-4xl">
+        {open ? `Admissions are open for the academic year ${year}` : 'Admission enquiries'}
+      </h2>
+      <p class="mt-4 max-w-xl text-leaf-100/90">
+        Fill in the online admission form, or call the school office on
+        <a href={site.phone.href} class="font-semibold whitespace-nowrap text-white underline decoration-saffron-300 underline-offset-4">{site.phone.display}</a>
+        or <a href={site.mobile.href} class="font-semibold whitespace-nowrap text-white underline decoration-saffron-300 underline-offset-4">{site.mobile.display}</a>.
+      </p>
+    </div>
+    <div class="flex flex-col gap-3 sm:flex-row md:flex-col">
+      <a href={formUrl} target="_blank" rel="noopener" class="btn btn-primary">
+        Online admission form
+        <ArrowUpRight size={18} aria-hidden="true" />
+        <span class="sr-only">(opens in a new tab)</span>
+      </a>
+      {
+        !compact && (
+          <a href={url('/admissions/')} class="btn btn-light">
+            Admission details
+            <ArrowRight size={18} aria-hidden="true" />
+          </a>
+        )
+      }
+      {
+        compact && (
+          <a href={site.phone.href} class="btn btn-light">
+            <Phone size={18} aria-hidden="true" />
+            Call the office
+          </a>
+        )
+      }
+    </div>
+  </div>
+</div>

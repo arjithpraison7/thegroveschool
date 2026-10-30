@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Gallery from '../../components/Gallery.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import Houses from '../../components/Houses.astro';
+import SchoolLifeCards from '../../components/SchoolLifeCards.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('schoolLife');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, summary, cover, coverAlt, gallery, galleryAlt, captions, showHouses } = entry.data;
+
+// Photos come from src/assets/galleries/<gallery>/, in file-name order (01.jpg, 02.jpg, ...).
+const allPhotos = import.meta.glob<{ default: ImageMetadata }>('../../assets/galleries/*/*.{jpg,jpeg,png,webp}', {
+  eager: true,
+});
+const photos = gallery
+  ? Object.entries(allPhotos)
+      .filter(([path]) => path.includes(`/galleries/${gallery}/`))
+      .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+      .map(([, module]) => module.default)
+  : [];
+---
+
+<BaseLayout title={title} description={summary}>
+  <PageHero
+    title={title}
+    eyebrow="School life"
+    intro={summary}
+    crumbs={[{ label: 'School Life', href: '/school-life/' }]}
+    image={cover}
+    imageAlt={coverAlt}
+  />
+
+  <section class="container-page py-14 md:py-20">
+    <div class="prose-grove text-lg">
+      <Content />
+    </div>
+  </section>
+
+  {
+    showHouses && (
+      <section class="container-page pb-14 md:pb-20" aria-labelledby="houses-heading">
+        <h2 id="houses-heading" class="text-3xl font-semibold">
+          The four houses
+        </h2>
+        <p class="mt-3 max-w-2xl text-muted">The houses are named after trees and plants: Neem, Peepal, Gulmohar and Tulsi.</p>
+        <div class="mt-8">
+          <Houses />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    photos.length > 0 && (
+      <section class="border-y border-line bg-sand/60 py-14 md:py-20" aria-labelledby="photos-heading">
+        <div class="container-page">
+          <div class="flex flex-wrap items-end justify-between gap-3">
+            <h2 id="photos-heading" class="text-3xl font-semibold">
+              Photos
+            </h2>
+            <p class="text-sm text-muted">{photos.length} photos · select a photo to enlarge it</p>
+          </div>
+          <div class="mt-8">
+            <Gallery photos={photos} alt={galleryAlt ?? title} captions={captions} label={`${title} photos`} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+  {photos.length > 0 && <Lightbox />}
+
+  <section class="container-page py-14 md:py-20" aria-labelledby="more-heading">
+    <h2 id="more-heading" class="text-3xl font-semibold">More from school life</h2>
+    <div class="mt-8">
+      <SchoolLifeCards exclude={entry.id} limit={4} />
+    </div>
+  </section>
+</BaseLayout>

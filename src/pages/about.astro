@@ -1,0 +1,219 @@
+---
+import { Image } from 'astro:assets';
+import { BookOpen, HeartHandshake, Lightbulb, Palette, Trees, Users } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AdmissionsCallout from '../components/AdmissionsCallout.astro';
+import wholeSchool from '../assets/galleries/annual-day/15.jpg';
+import inauguration from '../assets/photos/inauguration.jpg';
+import founder from '../assets/photos/sir-cp-ramaswami-aiyar.jpg';
+import { site } from '../data/site';
+
+const sections = [
+  { id: 'story', label: 'Our story' },
+  { id: 'philosophy', label: 'Our philosophy' },
+  { id: 'difference', label: 'What makes us different' },
+  { id: 'inclusive', label: 'An inclusive school' },
+  { id: 'timings', label: 'Timings & holidays' },
+];
+
+const milestones = [
+  { year: '1984', text: 'The Grove Nursery School is established by The C.P. Ramaswami Aiyar Foundation.' },
+  { year: '2004', text: 'It grows into The Grove School, recognised by the CISCE and following the ICSE–ISC syllabi.' },
+  { year: '2017', text: 'The Council grants ISC affiliation, and admissions to Class XI begin.' },
+];
+
+const differences = [
+  { icon: Users, text: 'Classes have limited numbers.' },
+  { icon: Trees, text: 'The ambience is unique.' },
+  { icon: BookOpen, text: 'The English is excellent.' },
+  { icon: Lightbulb, text: 'We aim to develop creativity, analytical reasoning and original thought.' },
+  {
+    icon: Palette,
+    text: 'Education goes beyond the curriculum. Classical music and dance, horticulture, athletics and sports, yoga, and art and craft are on the syllabus.',
+  },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description="The story, philosophy and values of The Grove School, Alwarpet, Chennai, established by The C.P. Ramaswami Aiyar Foundation."
+>
+  <PageHero
+    title="About Us"
+    eyebrow="The Grove School"
+    intro={`A school with a difference, established by ${site.foundation} in Alwarpet, Chennai.`}
+    image={wholeSchool}
+    imageAlt="The whole school on stage at the end of the Annual Day"
+  />
+
+  <div class="container-page grid gap-12 py-14 md:py-20 lg:grid-cols-[14rem_1fr] lg:gap-16">
+    <nav aria-label="On this page" class="hidden lg:block">
+      <div class="sticky top-28">
+        <p class="eyebrow">On this page</p>
+        <ul class="mt-4 space-y-1 border-l-2 border-line">
+          {
+            sections.map((s) => (
+              <li>
+                <a href={`#${s.id}`} class="-ml-0.5 block border-l-2 border-transparent py-1.5 pl-4 text-[0.95rem] text-muted hover:border-leaf-500 hover:text-leaf-800">
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <div class="min-w-0 space-y-20">
+      <section id="story" aria-labelledby="story-heading">
+        <p class="eyebrow">Since {site.founded}</p>
+        <h2 id="story-heading" class="mt-2 text-4xl font-semibold">Our story</h2>
+        <div class="mt-8 grid gap-10 xl:grid-cols-[1fr_20rem]">
+          <ol class="relative space-y-8 border-l-2 border-leaf-200 pl-8">
+            {
+              milestones.map((m) => (
+                <li class="relative">
+                  <span class="absolute top-1 -left-[2.6rem] grid size-5 place-items-center rounded-full bg-leaf-500 ring-4 ring-cream" aria-hidden="true" />
+                  <p class="font-display text-2xl font-semibold text-leaf-700">{m.year}</p>
+                  <p class="mt-1 text-lg leading-relaxed">{m.text}</p>
+                </li>
+              ))
+            }
+          </ol>
+          <figure>
+            <Image
+              src={inauguration}
+              alt="Guests at the inauguration of The Grove School, beside the inauguration plaque"
+              widths={[320, 640]}
+              width={640}
+              sizes="(min-width: 80rem) 20rem, 92vw"
+              class="w-full rounded-2xl object-cover shadow-[var(--shadow-card)]"
+            />
+            <figcaption class="mt-3 text-sm text-muted">The inauguration of The Grove School.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="philosophy" aria-labelledby="philosophy-heading">
+        <p class="eyebrow">Our philosophy</p>
+        <h2 id="philosophy-heading" class="mt-2 text-4xl font-semibold">Why education matters</h2>
+        <div class="prose-grove mt-6 text-lg">
+          <p>
+            Education marks the beginning of a child's journey through life and into adulthood. It provides the foundation for a
+            child's character, moulding future actions and values. It shapes a child's personality and creates impressions that
+            will last a lifetime. It is only through education that the future of the nation and its citizens can be moulded.
+          </p>
+          <p>
+            In today's competitive world, preparing a child for academic excellence is essential. But education must also teach
+            a child good values and how to become a good human being; the importance of one's own culture and traditions, as also
+            the importance of living in harmony with all other human beings; and respect for all creation — people, plants and
+            animals. Education should also develop creativity. A child must develop the ability to think innovatively in order to
+            excel in the field of his or her choice.
+          </p>
+          <p>The philosophy of <strong>The Grove School</strong> is based on the vision of Sir C.P. Ramaswami Aiyar.</p>
+        </div>
+
+        <figure class="mt-10 grid items-start gap-8 rounded-[1.75rem] bg-forest-900 p-8 text-white sm:grid-cols-[auto_1fr] md:p-10">
+          <div class="rounded-full bg-gradient-to-br from-saffron-300 to-leaf-400 p-1.5 justify-self-start">
+            <Image src={founder} alt="Sir C.P. Ramaswami Aiyar" width={164} densities={[1]} class="size-32 rounded-full object-cover object-top" />
+          </div>
+          <div>
+            <blockquote class="space-y-4 font-display text-xl leading-relaxed italic md:text-[1.4rem]">
+              <p>
+                “The school shall have served its purpose best, fulfilled its object effectively, if, in addition to the teaching
+                of the three R's and all the things that go by the scholastic name, the wonderful niceties of life are so
+                inculcated, without which man as a gregarious animal would be written down in history as a failure.
+              </p>
+              <p>
+                Let the school be the centre, the nucleus, the focus, radiating not distrust, not factions, not a spirit of
+                partnership, but the spirit of oneness and harmony towards conjoint effort and the fulfilment of conjoint purpose
+                and the reaching towards that goal for which all of us are yearning.”
+              </p>
+            </blockquote>
+            <figcaption class="mt-5 font-semibold text-saffron-300">— Sir C.P. Ramaswami Aiyar</figcaption>
+          </div>
+        </figure>
+      </section>
+
+      <section id="difference" aria-labelledby="difference-heading">
+        <p class="eyebrow">A school with a difference</p>
+        <h2 id="difference-heading" class="mt-2 text-4xl font-semibold">What makes us different</h2>
+        <ul class="mt-8 grid gap-4 md:grid-cols-2">
+          {
+            differences.map(({ icon: Icon, text }, i) => (
+              <li class:list={['flex gap-4 rounded-2xl border border-line bg-paper p-5', i === differences.length - 1 && 'md:col-span-2']}>
+                <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-leaf-100 text-leaf-700">
+                  <Icon size={22} aria-hidden="true" />
+                </span>
+                <span class="self-center text-lg leading-snug">{text}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-8 max-w-3xl text-lg leading-relaxed">
+          For more than ten years, The Grove School students have been getting <strong>100% first class with distinction</strong>.
+          Besides, many children have won gold and silver medals in athletics and games.
+        </p>
+      </section>
+
+      <section id="inclusive" aria-labelledby="inclusive-heading" class="rounded-[1.75rem] border border-saffron-100 bg-saffron-50 p-8 md:p-10">
+        <div class="flex items-center gap-3">
+          <HeartHandshake size={28} class="text-saffron-700" aria-hidden="true" />
+          <p class="eyebrow text-saffron-700">Saraswathi Kendra &amp; Lakshmi Kendra</p>
+        </div>
+        <h2 id="inclusive-heading" class="mt-3 text-4xl font-semibold">An inclusive school</h2>
+        <p class="mt-5 max-w-3xl text-lg leading-relaxed">
+          The Grove School is an inclusive school, with special needs children admitted equally. It has two sections — Saraswathi
+          Kendra and Lakshmi Kendra — the former for children with special needs. When it is felt that a special child can be
+          integrated with the other children, he or she is shifted to Lakshmi Kendra, and goes on to take the ICSE examination.
+        </p>
+      </section>
+
+      <section id="timings" aria-labelledby="timings-heading">
+        <p class="eyebrow">Plan your day</p>
+        <h2 id="timings-heading" class="mt-2 text-4xl font-semibold">Timings &amp; holidays</h2>
+        <div class="mt-8 grid gap-6 md:grid-cols-2">
+          <div>
+            <h3 class="text-xl font-semibold">School timings</h3>
+            <dl class="mt-3 divide-y divide-line rounded-2xl border border-line bg-paper">
+              {
+                site.schoolTimings.map((t) => (
+                  <div class="flex justify-between gap-4 px-5 py-3">
+                    <dt class="text-muted">{t.label}</dt>
+                    <dd class="text-right font-semibold whitespace-nowrap">{t.time}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold">Office timings</h3>
+            <dl class="mt-3 divide-y divide-line rounded-2xl border border-line bg-paper">
+              {
+                site.officeTimings.map((t) => (
+                  <div class="flex justify-between gap-4 px-5 py-3">
+                    <dt class="text-muted">{t.label}</dt>
+                    <dd class="text-right font-semibold whitespace-nowrap">{t.time}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </div>
+        </div>
+        <p class="mt-6 max-w-3xl leading-relaxed text-muted">
+          <strong class="text-forest-900">Holidays:</strong> The Grove School remains closed on Sundays, national holidays and festival
+          holidays, as listed in The Grove School calendar for the academic year.
+        </p>
+      </section>
+
+      <p class="border-y border-line py-10 text-center font-display text-2xl leading-snug font-medium text-leaf-800 italic md:text-3xl">
+        “Our aim is excellence in academics, cultural and general life skills.”
+      </p>
+    </div>
+  </div>
+
+  <section class="container-page pb-16 md:pb-24">
+    <AdmissionsCallout />
+  </section>
+</BaseLayout>

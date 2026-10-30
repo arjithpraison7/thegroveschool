@@ -1,0 +1,120 @@
+---
+import { BookOpen, Bus, FileText, HeartPulse, Shirt, Baby, Salad } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import AdmissionsCallout from '../components/AdmissionsCallout.astro';
+import { site } from '../data/site';
+
+const { open, year } = site.admissions;
+const intro = open
+  ? `Admissions are open for the academic year ${year}. Fill in the online admission form, and read the guidelines below.`
+  : 'Read the admission guidelines below, and contact the school office for details.';
+---
+
+<BaseLayout
+  title="Admissions"
+  description={`Admissions ${year} at The Grove School, Alwarpet, Chennai: online admission form, documents required, uniform, food and other guidelines.`}
+>
+  <PageHero title="Admissions" eyebrow={`Academic year ${year}`} intro={intro} />
+
+  <section class="container-page py-14 md:py-16">
+    <AdmissionsCallout compact />
+  </section>
+
+  <section class="container-page pb-16 md:pb-24" aria-labelledby="guidelines-heading">
+    <h2 id="guidelines-heading" class="text-4xl font-semibold">Admission guidelines</h2>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)] lg:row-span-2">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-leaf-100 text-leaf-700"><FileText size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">Documents required</h3>
+        </header>
+        <ol class="mt-5 space-y-4">
+          {
+            [
+              'The admission form, duly filled in with all particulars fully and correctly furnished.',
+              'A photocopy of the birth certificate (the original is to be seen and returned immediately).',
+              'Transfer certificate and conduct certificate, where applicable.',
+              'Two stamp-sized photographs of the child.',
+            ].map((doc, i) => (
+              <li class="flex gap-4">
+                <span class="grid size-8 shrink-0 place-items-center rounded-full bg-leaf-700 text-sm font-bold text-white">{i + 1}</span>
+                <span class="leading-relaxed">{doc}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)]">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-leaf-100 text-leaf-700"><Shirt size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">Uniform</h3>
+        </header>
+        <ul class="prose-grove mt-5">
+          <li>Students from Classes I to X must wear the school uniform, with black tennis shoes and black socks, on all days.</li>
+          <li>Students from Classes I to X must wear their house T-shirts on days specified by the school.</li>
+          <li>
+            Students of LKG and UKG may wear coloured dress on all days. Shoes and socks are advised on all days, and they must bring an
+            extra set of clothes and napkins.
+          </li>
+        </ul>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)]">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-leaf-100 text-leaf-700"><BookOpen size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">Books</h3>
+        </header>
+        <p class="mt-5 leading-relaxed">
+          The list of textbooks and notebooks for each class will be given before the school reopens, and the books may be procured
+          separately from the school office.
+        </p>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)]">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-leaf-100 text-leaf-700"><HeartPulse size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">Health</h3>
+        </header>
+        <p class="mt-5 leading-relaxed">
+          The school must be informed if the child is suffering from any illness or allergy, is on any medication, or has any medical
+          condition requiring particular care. <strong>A medical certificate, filled in and signed by a registered medical
+          practitioner, must be submitted to the school.</strong>
+        </p>
+      </article>
+
+      <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)]">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-leaf-100 text-leaf-700"><Baby size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">Toilet training</h3>
+        </header>
+        <p class="mt-5 leading-relaxed">The school insists that children who are admitted must be toilet trained.</p>
+      </article>
+
+      <article class="rounded-[1.5rem] border-2 border-saffron-300 bg-saffron-50 p-7">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-saffron-200 text-saffron-800"><Salad size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">Food</h3>
+        </header>
+        <p class="mt-5 leading-relaxed">
+          Children must bring their own snack and lunch to school. <strong>Only vegetarian food is permitted on the campus.</strong> This rule
+          must be adhered to strictly, failing which the school reserves the right to terminate the child. Food must be sent with the
+          child; parents will not be permitted to bring food during break or lunch time.
+        </p>
+      </article>
+
+      <article class="rounded-[1.5rem] border-2 border-saffron-300 bg-saffron-50 p-7">
+        <header class="flex items-center gap-3">
+          <span class="grid size-11 place-items-center rounded-xl bg-saffron-200 text-saffron-800"><Bus size={22} aria-hidden="true" /></span>
+          <h3 class="text-2xl font-semibold">No transport is provided</h3>
+        </header>
+        <p class="mt-5 leading-relaxed">
+          The school will not provide transport under any circumstances. Parents must make their own arrangements to pick up and drop
+          their child, and the school bears no responsibility in this regard.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

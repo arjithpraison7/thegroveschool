@@ -1,0 +1,86 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { Newspaper } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Lightbox from '../components/Lightbox.astro';
+import mylaporeTimes from '../assets/press/mylapore-times-2017.jpg';
+import coolestSchools from '../assets/press/chennai-coolest-schools.jpg';
+import theHindu from '../assets/press/the-hindu-icse-isc-results.png';
+import timesOfIndia from '../assets/press/times-of-india-icse-isc-results.png';
+
+const clippings = [
+  {
+    image: mylaporeTimes,
+    publication: 'Mylapore Times',
+    date: '9–15 September 2017',
+    headline: 'The Grove hosts athletic meet',
+    summary:
+      'The Association of Schools of the Indian School Certificate (ASISC) Tamil Nadu Region athletic meet, held on 26 and 27 August, was organised and hosted by The Grove School. 700 students from 44 schools took part.',
+  },
+  {
+    image: coolestSchools,
+    publication: 'The Times of India · Times City',
+    date: '17 February 2014',
+    headline: 'Chennai’s coolest schools',
+    summary: 'The Times of India’s rankings of Chennai schools, based on academics, sports, infrastructure, teaching and use of technology.',
+  },
+  {
+    image: theHindu,
+    publication: 'The Hindu',
+    date: '20 May 2012',
+    headline: 'Students from State ace ICSE, ISC exams',
+    summary: 'Coverage of the 2012 ICSE and ISC examination results in Tamil Nadu.',
+  },
+  {
+    image: timesOfIndia,
+    publication: 'The Times of India',
+    date: '20 May 2012',
+    headline: 'South surge in ICSE, ISC results',
+    summary: 'Coverage of the 2012 ICSE and ISC examination results.',
+  },
+];
+
+const items = await Promise.all(
+  clippings.map(async (c) => ({
+    ...c,
+    full: (await getImage({ src: c.image, width: Math.min(c.image.width, 1600), format: 'webp', quality: 80 })).src,
+  })),
+);
+---
+
+<BaseLayout title="In the News" description="The Grove School, Alwarpet, Chennai, in the newspapers.">
+  <PageHero title="In the News" eyebrow="Media" intro="The Grove School in the newspapers. Select a clipping to read it in full." crumbs={[{ label: 'Achievements', href: '/achievements/' }]} />
+
+  <section class="container-page py-14 md:py-20">
+    <ul class="grid gap-8 md:grid-cols-2" data-gallery aria-label="Newspaper clippings">
+      {
+        items.map((item) => (
+          <li>
+            <article class="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-line bg-paper shadow-[var(--shadow-card)]">
+              <a href={item.full} data-lightbox data-caption={`${item.publication}, ${item.date}: “${item.headline}”`} class="group block overflow-hidden bg-sand">
+                <Image
+                  src={item.image}
+                  alt={`Newspaper clipping from ${item.publication}, ${item.date}: “${item.headline}”`}
+                  widths={[480, 720]}
+                  width={Math.min(720, item.image.width)}
+                  sizes="(min-width: 48rem) 36rem, 92vw"
+                  class="aspect-[4/3] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+                />
+              </a>
+              <div class="flex flex-1 flex-col p-6">
+                <p class="flex items-center gap-2 text-sm font-semibold text-saffron-700">
+                  <Newspaper size={16} aria-hidden="true" />
+                  {item.publication} · {item.date}
+                </p>
+                <h2 class="mt-2 text-2xl font-semibold">{item.headline}</h2>
+                <p class="mt-2 leading-relaxed text-muted">{item.summary}</p>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <Lightbox />
+</BaseLayout>

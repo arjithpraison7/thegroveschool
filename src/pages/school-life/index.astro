@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SchoolLifeCards from '../../components/SchoolLifeCards.astro';
+import AdmissionsCallout from '../../components/AdmissionsCallout.astro';
+
+const intro =
+  'Education goes beyond the curriculum. Classical music and dance, horticulture, athletics and sports, yoga, and art and craft are all on the syllabus.';
+---
+
+<BaseLayout title="School Life" description={intro}>
+  <PageHero title="School Life" eyebrow="Beyond the classroom" intro={intro} />
+  <section class="container-page py-14 md:py-20">
+    <SchoolLifeCards headingLevel="h2" />
+  </section>
+  <section class="container-page pb-16 md:pb-24">
+    <AdmissionsCallout />
+  </section>
+</BaseLayout>

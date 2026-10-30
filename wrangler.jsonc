@@ -1,0 +1,9 @@
+// Only needed if the site is hosted on Cloudflare instead of GitHub Pages (see docs/HOSTING.md).
+{
+  "name": "thegroveschool",
+  "compatibility_date": "2026-10-28",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

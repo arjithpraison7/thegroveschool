@@ -1,0 +1,187 @@
+---
+import { Image } from 'astro:assets';
+import { ChevronDown, Mail, Menu, Phone, X, ArrowUpRight } from '@lucide/astro';
+import emblem from '../assets/brand/emblem.png';
+import { nav, site } from '../data/site';
+import { url, isActive } from '../lib/url';
+
+const path = Astro.url.pathname;
+const applyLabel = site.admissions.open ? `Apply ${site.admissions.year}` : 'Admissions';
+---
+
+<aside aria-label="Contact details" class="hidden bg-forest-900 text-sm text-leaf-100 md:block">
+  <div class="container-page flex h-10 items-center justify-between gap-6">
+    <p>Affiliated to the CISCE · ICSE (Class X) &amp; ISC (Class XII)</p>
+    <ul class="flex items-center gap-5">
+      <li>
+        <a href={site.phone.href} class="inline-flex items-center gap-1.5 hover:text-white">
+          <Phone size={14} aria-hidden="true" />
+          {site.phone.display}
+        </a>
+      </li>
+      <li>
+        <a href={`mailto:${site.email}`} class="inline-flex items-center gap-1.5 hover:text-white">
+          <Mail size={14} aria-hidden="true" />
+          {site.email}
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur supports-[backdrop-filter]:bg-paper/85">
+  <div class="container-page flex h-[4.5rem] items-center justify-between gap-4">
+    <a href={url('/')} class="flex items-center gap-3 rounded-lg">
+      <Image src={emblem} alt="" height={48} densities={[1, 2]} class="h-12 w-auto" loading="eager" />
+      <span class="leading-tight">
+        <span class="block font-display text-[1.35rem] font-semibold tracking-tight text-forest-900">{site.name}</span>
+        <span class="block text-xs font-medium tracking-wide text-muted">Est. {site.founded} · Alwarpet, Chennai</span>
+      </span>
+    </a>
+
+    <nav aria-label="Main" class="hidden items-center gap-1 lg:flex">
+      <ul class="flex items-center gap-0.5">
+        {
+          nav.map((item) => {
+            const active = isActive(item.href, path);
+            const linkClass = `relative inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[0.95rem] font-semibold transition-colors hover:bg-leaf-50 hover:text-leaf-800 ${active ? 'text-leaf-800' : 'text-forest-900'}`;
+            return item.children ? (
+              <li class="group relative">
+                <a href={url(item.href)} class={linkClass} aria-current={active ? 'true' : undefined}>
+                  {item.label}
+                  <ChevronDown size={16} aria-hidden="true" class="transition-transform group-hover:rotate-180" />
+                  {active && <span class="absolute inset-x-3.5 -bottom-[0.95rem] h-[3px] rounded-full bg-leaf-500" />}
+                </a>
+                <div class="invisible absolute top-full left-1/2 z-50 w-64 -translate-x-1/2 translate-y-1 pt-3 opacity-0 transition duration-150 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  <ul class="rounded-2xl border border-line bg-paper p-2 shadow-[var(--shadow-lift)]">
+                    {item.children.map((child) => (
+                      <li>
+                        <a
+                          href={url(child.href)}
+                          class={`block rounded-xl px-3.5 py-2.5 text-[0.95rem] font-medium hover:bg-leaf-50 hover:text-leaf-800 ${path === url(child.href) ? 'bg-leaf-50 text-leaf-800' : 'text-ink'}`}
+                          aria-current={path === url(child.href) ? 'page' : undefined}
+                        >
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ) : (
+              <li>
+                <a href={url(item.href)} class={linkClass} aria-current={active ? 'page' : undefined}>
+                  {item.label}
+                  {active && <span class="absolute inset-x-3.5 -bottom-[0.95rem] h-[3px] rounded-full bg-leaf-500" />}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <a href={site.admissions.formUrl} target="_blank" rel="noopener" class="btn btn-primary ml-3 px-5 py-2.5 text-[0.95rem]">
+        {applyLabel}
+        <ArrowUpRight size={16} aria-hidden="true" />
+        <span class="sr-only">(opens the online admission form in a new tab)</span>
+      </a>
+    </nav>
+
+    <button
+      type="button"
+      class="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-4 py-2.5 font-semibold text-forest-900 lg:hidden"
+      aria-haspopup="dialog"
+      aria-controls="mobile-menu"
+      data-menu-open
+    >
+      <Menu size={20} aria-hidden="true" />
+      Menu
+    </button>
+  </div>
+</header>
+
+<dialog
+  id="mobile-menu"
+  aria-label="Menu"
+  class="m-0 ml-auto h-dvh max-h-dvh w-full max-w-sm overflow-y-auto bg-paper p-0 text-ink shadow-2xl backdrop:bg-forest-950/50 backdrop:backdrop-blur-sm"
+>
+  <div class="flex items-center justify-between border-b border-line px-5 py-4">
+    <span class="font-display text-lg font-semibold text-forest-900">{site.name}</span>
+    <button type="button" class="rounded-full p-2 hover:bg-leaf-50" data-menu-close>
+      <X size={22} aria-hidden="true" />
+      <span class="sr-only">Close menu</span>
+    </button>
+  </div>
+  <nav aria-label="Main" class="px-3 py-4">
+    <ul class="space-y-1">
+      <li>
+        <a href={url('/')} class="block rounded-xl px-3 py-2.5 text-lg font-semibold hover:bg-leaf-50" aria-current={path === url('/') ? 'page' : undefined}>Home</a>
+      </li>
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              href={url(item.href)}
+              class={`block rounded-xl px-3 py-2.5 text-lg font-semibold hover:bg-leaf-50 ${isActive(item.href, path, true) ? 'bg-leaf-50 text-leaf-800' : ''}`}
+              aria-current={isActive(item.href, path, true) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+            {item.children && (
+              <ul class="mb-2 ml-3 border-l-2 border-leaf-100 pl-3">
+                {item.children
+                  .filter((child) => child.href !== item.href)
+                  .map((child) => (
+                    <li>
+                      <a
+                        href={url(child.href)}
+                        class={`block rounded-lg px-3 py-2 text-[0.98rem] hover:bg-leaf-50 ${path === url(child.href) ? 'font-semibold text-leaf-800' : 'text-muted'}`}
+                        aria-current={path === url(child.href) ? 'page' : undefined}
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="space-y-3 border-t border-line px-5 py-5">
+    <a href={site.admissions.formUrl} target="_blank" rel="noopener" class="btn btn-primary w-full">
+      {applyLabel}
+      <ArrowUpRight size={16} aria-hidden="true" />
+      <span class="sr-only">(opens in a new tab)</span>
+    </a>
+    <a href={site.phone.href} class="flex items-center gap-2 text-muted"><Phone size={16} aria-hidden="true" />{site.phone.display}</a>
+    <a href={`mailto:${site.email}`} class="flex items-center gap-2 break-all text-muted"><Mail size={16} aria-hidden="true" />{site.email}</a>
+  </div>
+</dialog>
+
+<script>
+  const menu = document.getElementById('mobile-menu') as HTMLDialogElement | null;
+  document.querySelector('[data-menu-open]')?.addEventListener('click', () => menu?.showModal());
+  menu?.querySelector('[data-menu-close]')?.addEventListener('click', () => menu.close());
+  // Close when the backdrop (the dialog element itself, outside its content) is clicked.
+  menu?.addEventListener('click', (event) => {
+    if (event.target === menu) menu.close();
+  });
+  // The menu is irrelevant once the desktop navigation is visible.
+  matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && menu?.close());
+</script>
+
+<style>
+  :global(html:has(#mobile-menu[open])) {
+    overflow: hidden;
+  }
+  dialog[open] {
+    animation: slide-in 0.22s ease-out;
+  }
+  @keyframes slide-in {
+    from {
+      transform: translateX(1.5rem);
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,0 +1,304 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowRight, ArrowUpRight, BookOpen, Lightbulb, MapPin, Navigation, Phone, Trees, Users } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Leaf from '../components/Leaf.astro';
+import SchoolLifeCards from '../components/SchoolLifeCards.astro';
+import AdmissionsCallout from '../components/AdmissionsCallout.astro';
+import heroMain from '../assets/galleries/annual-day/12.jpg';
+import heroInset from '../assets/photos/students-art-activity.jpg';
+import building from '../assets/photos/school-building.jpg';
+import founder from '../assets/photos/sir-cp-ramaswami-aiyar.jpg';
+import { site, fullAddress, mapLinks } from '../data/site';
+import { url } from '../lib/url';
+
+// The school's own four points from the old home page, word for word.
+const highlights = [
+  { icon: Users, text: 'Classes have limited numbers' },
+  { icon: BookOpen, text: 'The English is excellent' },
+  { icon: Trees, text: 'The ambience is unique' },
+  { icon: Lightbulb, text: 'We aim to develop creativity, analytical reasoning and original thought' },
+];
+
+const abs = (path: string) => new URL(url(path), Astro.site).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'School',
+  name: site.name,
+  url: abs('/'),
+  logo: abs('/icon.png'),
+  image: abs('/og-image.jpg'),
+  description: site.description,
+  foundingDate: String(site.founded),
+  email: site.email,
+  telephone: site.phone.href.replace('tel:', ''),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: `${site.address.street}, ${site.address.locality}`,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
+    addressCountry: site.address.country,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: site.map.latitude, longitude: site.map.longitude },
+  parentOrganization: { '@type': 'Organization', name: site.foundation },
+  sameAs: [site.magazine.url],
+};
+---
+
+<BaseLayout jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="relative overflow-hidden bg-leaf-50">
+    <Leaf class="pointer-events-none absolute -top-16 left-[42%] hidden w-40 -rotate-[16deg] text-leaf-200/70 lg:block" />
+    <Leaf class="pointer-events-none absolute -bottom-20 -left-10 w-48 rotate-[28deg] text-leaf-200/60" />
+    <div class="container-page relative grid items-center gap-14 pt-12 pb-20 md:pt-16 lg:grid-cols-[1fr_1.05fr] lg:pt-20 lg:pb-28">
+      <div>
+        <p class="eyebrow">Est. {site.founded} · ICSE &amp; ISC · Alwarpet, Chennai</p>
+        <h1 class="mt-4 text-[2.9rem] leading-[1.04] font-semibold sm:text-6xl lg:text-[4.4rem]">
+          A school with a <em class="font-medium text-leaf-700">difference.</em>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
+          Established by {site.foundation}, The Grove School aims to provide quality education and creative thinking.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href={site.admissions.formUrl} target="_blank" rel="noopener" class="btn btn-primary">
+            {site.admissions.open ? `Apply for ${site.admissions.year}` : 'Admission form'}
+            <ArrowUpRight size={18} aria-hidden="true" />
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+          <a href={url('/about/')} class="btn btn-outline">
+            Discover the school
+            <ArrowRight size={18} aria-hidden="true" />
+          </a>
+        </div>
+        <dl class="mt-10 grid max-w-lg grid-cols-3 gap-3 border-t border-leaf-200 pt-6 sm:gap-4">
+          <div>
+            <dt class="text-sm text-muted">Founded</dt>
+            <dd class="font-display text-xl font-semibold whitespace-nowrap text-forest-900 sm:text-2xl">{site.founded}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-muted">Curriculum</dt>
+            <dd class="font-display text-xl font-semibold whitespace-nowrap text-forest-900 sm:text-2xl">ICSE · ISC</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-muted">Classes</dt>
+            <dd class="font-display text-xl font-semibold whitespace-nowrap text-forest-900 sm:text-2xl">Pre-KG–XII</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="relative mx-3 sm:mx-10 lg:mx-0">
+        <div class="absolute -inset-3 rotate-[3deg] rounded-[2.25rem] bg-saffron-200/70" aria-hidden="true"></div>
+        <Image
+          src={heroMain}
+          alt="Young children in colourful flower costumes on stage at the school's Annual Day"
+          widths={[560, 800, 1100, 1400]}
+          width={1400}
+          sizes="(min-width: 76rem) 37rem, (min-width: 64rem) 48vw, 92vw"
+          class="relative aspect-[4/3] w-full rounded-[2rem] object-cover shadow-[var(--shadow-lift)]"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <Image
+          src={heroInset}
+          alt="Young children working together on a colourful art project"
+          widths={[240, 360, 480]}
+          width={480}
+          sizes="(min-width: 64rem) 15rem, 40vw"
+          class="absolute -bottom-10 -left-6 hidden aspect-[4/3] w-[42%] -rotate-[4deg] rounded-2xl border-[5px] border-paper object-cover shadow-[var(--shadow-lift)] sm:block"
+          loading="eager"
+        />
+        {
+          site.admissions.open && (
+            <a
+              href={site.admissions.formUrl}
+              target="_blank"
+              rel="noopener"
+              class="absolute -top-5 -right-3 flex items-center gap-2 rounded-full bg-paper px-4 py-2.5 text-sm font-bold text-forest-900 shadow-[var(--shadow-lift)] transition hover:-translate-y-0.5 sm:-right-6"
+            >
+              <span class="relative flex size-2.5">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-saffron-400 opacity-75" />
+                <span class="relative inline-flex size-2.5 rounded-full bg-saffron-500" />
+              </span>
+              Admissions open · {site.admissions.year}
+              <span class="sr-only">(opens the online admission form in a new tab)</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Welcome -->
+  <section class="container-page grid items-center gap-12 py-16 md:py-24 lg:grid-cols-2 lg:gap-16">
+    <figure class="order-2 lg:order-1">
+      <Image
+        src={building}
+        alt="The Grove School building at 1 Eldams Road, Alwarpet"
+        widths={[480, 747]}
+        width={747}
+        sizes="(min-width: 64rem) 36rem, 92vw"
+        class="aspect-[16/10] w-full rounded-[1.75rem] object-cover shadow-[var(--shadow-card)]"
+      />
+      <figcaption class="mt-3 flex items-center gap-2 text-sm text-muted">
+        <MapPin size={15} aria-hidden="true" class="text-leaf-600" />
+        {fullAddress}
+      </figcaption>
+    </figure>
+    <div class="order-1 lg:order-2">
+      <p class="eyebrow">Welcome to The Grove School</p>
+      <h2 class="mt-3 text-4xl font-semibold sm:text-[2.75rem]">Quality education and creative thinking, since {site.founded}</h2>
+      <p class="mt-5 text-lg leading-relaxed text-muted">
+        The Grove Nursery School was established in {site.founded}, and grew into The Grove School in {site.inaugurated}. Recognised
+        by the CISCE, the school follows the ICSE and ISC syllabi, and education here goes well beyond the curriculum.
+      </p>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+        {
+          highlights.map(({ icon: Icon, text }) => (
+            <li class="flex items-center gap-4 rounded-2xl border border-line bg-paper p-4">
+              <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-leaf-100 text-leaf-700">
+                <Icon size={22} aria-hidden="true" />
+              </span>
+              <span class="leading-snug font-semibold text-forest-900">{text}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <a href={url('/about/')} class="link-arrow mt-8">
+        More about the school <ArrowRight size={17} aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+
+  <!-- Philosophy -->
+  <section class="relative isolate overflow-hidden bg-forest-900 py-16 text-white md:py-24">
+    <Leaf class="absolute -top-20 -left-16 -z-10 w-80 -rotate-[30deg] text-leaf-500/10" />
+    <Leaf class="absolute -right-12 -bottom-24 -z-10 w-72 rotate-[20deg] text-saffron-400/10" />
+    <div class="container-page grid items-center gap-10 md:grid-cols-[auto_1fr] md:gap-16">
+      <div class="mx-auto md:mx-0">
+        <div class="rounded-full bg-gradient-to-br from-saffron-300 to-leaf-400 p-1.5">
+          <Image
+            src={founder}
+            alt="Sir C.P. Ramaswami Aiyar"
+            width={164}
+            densities={[1]}
+            class="size-40 rounded-full object-cover object-top md:size-48"
+          />
+        </div>
+      </div>
+      <figure>
+        <p class="eyebrow text-saffron-300">Our philosophy</p>
+        <blockquote class="mt-4 font-display text-2xl leading-snug font-normal italic sm:text-3xl md:text-[2.15rem]">
+          <p>
+            “Let the school be the centre, the nucleus, the focus, radiating not distrust, not factions … but the spirit of
+            oneness and harmony towards conjoint effort and the fulfilment of conjoint purpose …”
+          </p>
+        </blockquote>
+        <figcaption class="mt-6 text-leaf-100/90">
+          <span class="font-semibold text-white">Sir C.P. Ramaswami Aiyar</span>, on whose vision the philosophy of The Grove School is
+          based.
+          <a href={url('/about/#philosophy')} class="ml-1 font-semibold text-saffron-300 underline underline-offset-4 hover:text-saffron-200">Read the full quote</a>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- School life -->
+  <section class="py-16 md:py-24">
+    <div class="container-page">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <p class="eyebrow">Life at The Grove</p>
+          <h2 class="mt-3 text-4xl font-semibold sm:text-[2.75rem]">Education beyond the curriculum</h2>
+          <p class="mt-4 text-lg text-muted">
+            Classical music and dance, horticulture, athletics and sports, yoga, and art and craft are all on the syllabus.
+          </p>
+        </div>
+        <a href={url('/school-life/')} class="btn btn-outline">
+          All of school life <ArrowRight size={18} aria-hidden="true" />
+        </a>
+      </div>
+      <div class="mt-10">
+        <SchoolLifeCards />
+      </div>
+    </div>
+  </section>
+
+  <!-- Inclusive school + results -->
+  <section class="container-page grid gap-6 pb-16 md:pb-24 lg:grid-cols-2">
+    <article class="rounded-[1.75rem] border border-saffron-100 bg-saffron-50 p-8 md:p-10">
+      <p class="eyebrow text-saffron-700">Saraswathi Kendra &amp; Lakshmi Kendra</p>
+      <h2 class="mt-3 text-3xl font-semibold">An inclusive school</h2>
+      <p class="mt-4 leading-relaxed text-ink/85">
+        Children with special needs are admitted equally. The school has two sections: Saraswathi Kendra, for children with
+        special needs, and Lakshmi Kendra. When it is felt that a child can be integrated with the other children, he or she
+        moves to Lakshmi Kendra and goes on to take the ICSE examination.
+      </p>
+    </article>
+    <article class="rounded-[1.75rem] border border-leaf-100 bg-leaf-50 p-8 md:p-10">
+      <p class="eyebrow">Board results</p>
+      <h2 class="mt-3 text-3xl font-semibold">100% first class with distinction</h2>
+      <p class="mt-4 leading-relaxed text-ink/85">
+        For more than ten years, Grove School students have been getting 100% first class with distinction. Many children have
+        also won gold and silver medals in athletics and games.
+      </p>
+      <a href={url('/achievements/')} class="link-arrow mt-5">
+        Highlights &amp; achievements <ArrowRight size={17} aria-hidden="true" />
+      </a>
+    </article>
+  </section>
+
+  <!-- Admissions -->
+  <section class="container-page pb-16 md:pb-24">
+    <AdmissionsCallout />
+  </section>
+
+  <!-- Visit -->
+  <section class="border-t border-line bg-sand/60 py-16 md:py-20">
+    <div class="container-page grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+      <div>
+        <p class="eyebrow">Visit us</p>
+        <h2 class="mt-3 text-3xl font-semibold">Find us in Alwarpet</h2>
+        <address class="mt-4 leading-relaxed text-ink/85 not-italic">
+          {site.foundation}<br />{fullAddress}
+        </address>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href={mapLinks.directions} target="_blank" rel="noopener" class="btn btn-green">
+            <Navigation size={17} aria-hidden="true" /> Directions
+            <span class="sr-only">(opens Google Maps in a new tab)</span>
+          </a>
+          <a href={site.phone.href} class="btn btn-outline"><Phone size={17} aria-hidden="true" /> Call us</a>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold">School timings</h3>
+        <dl class="mt-4 divide-y divide-line rounded-2xl border border-line bg-paper">
+          {
+            site.schoolTimings.map((t) => (
+              <div class="flex justify-between gap-4 px-5 py-3">
+                <dt class="text-muted">{t.label}</dt>
+                <dd class="text-right font-semibold whitespace-nowrap">{t.time}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold">Office timings</h3>
+        <dl class="mt-4 divide-y divide-line rounded-2xl border border-line bg-paper">
+          {
+            site.officeTimings.map((t) => (
+              <div class="flex justify-between gap-4 px-5 py-3">
+                <dt class="text-muted">{t.label}</dt>
+                <dd class="text-right font-semibold whitespace-nowrap">{t.time}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="mt-4 text-[0.95rem] text-muted">
+          Closed on Sundays, national holidays and festival holidays as listed in the school calendar.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,88 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { ArrowRight, ArrowUpRight, CalendarDays } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import collage from '../assets/photos/achievements-collage.jpg';
+import { url } from '../lib/url';
+
+const years = await Promise.all(
+  (await getCollection('achievements'))
+    .sort((a, b) => b.data.order - a.data.order)
+    .map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+);
+---
+
+<BaseLayout
+  title="Highlights & Achievements"
+  description="Board exam results, awards, competitions and highlights of the year at The Grove School, Alwarpet, Chennai."
+>
+  <PageHero
+    title="Highlights & Achievements"
+    eyebrow="Celebrating our students"
+    intro="Board results, awards, competitions and the highlights of the school year."
+  >
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a href={url('/media/')} class="btn btn-outline">The Grove in the news <ArrowRight size={17} aria-hidden="true" /></a>
+    </div>
+  </PageHero>
+
+  {
+    years.map(({ entry, Content }) => (
+      <section class="container-page py-14 md:py-20" aria-labelledby={`year-${entry.id}`}>
+        <Image
+          src={collage}
+          alt="Students with their trophies and certificates"
+          width={747}
+          sizes="(min-width: 50rem) 47rem, 92vw"
+          class="w-full max-w-3xl rounded-2xl shadow-[var(--shadow-card)]"
+        />
+        <p class="eyebrow mt-10">Academic year {entry.data.academicYear}</p>
+        <h2 id={`year-${entry.id}`} class="mt-2 text-4xl font-semibold">
+          {entry.data.title}
+        </h2>
+        <p class="mt-2 flex items-center gap-2 text-muted">
+          <CalendarDays size={17} aria-hidden="true" /> {entry.data.period}
+        </p>
+
+        <div class="mt-10 grid gap-14 lg:grid-cols-[minmax(0,1fr)_24rem]">
+          <div class="prose-grove text-[1.05rem]">
+            <Content />
+          </div>
+
+          {entry.data.events.length > 0 && (
+            <aside aria-labelledby={`timeline-${entry.id}`}>
+              <div class="rounded-[1.5rem] border border-line bg-paper p-6 shadow-[var(--shadow-card)] lg:sticky lg:top-28 lg:max-h-[calc(100dvh-8rem)] lg:overflow-y-auto">
+                <h3 id={`timeline-${entry.id}`} class="text-2xl font-semibold">
+                  Through the year
+                </h3>
+                {[...new Set(entry.data.events.map((e) => e.year))].map((year) => (
+                  <div class="mt-6">
+                    <p class="font-display text-xl font-semibold text-leaf-700">{year}</p>
+                    <ol class="mt-3 space-y-5 border-l-2 border-leaf-200 pl-5">
+                      {entry.data.events
+                        .filter((e) => e.year === year)
+                        .map((event) => (
+                          <li class="relative">
+                            <span class="absolute top-2 -left-[1.6rem] size-3 rounded-full bg-leaf-500 ring-4 ring-paper" aria-hidden="true" />
+                            <p class="text-sm font-bold tracking-wide text-saffron-700 uppercase">{event.date}</p>
+                            <p class="mt-1 text-[0.95rem] leading-relaxed">{event.text}</p>
+                            {event.link && (
+                              <a href={event.link.href} target="_blank" rel="noopener" class="link-arrow mt-1 text-sm">
+                                {event.link.label} <ArrowUpRight size={14} aria-hidden="true" />
+                              </a>
+                            )}
+                          </li>
+                        ))}
+                    </ol>
+                  </div>
+                ))}
+              </div>
+            </aside>
+          )}
+        </div>
+      </section>
+    ))
+  }
+</BaseLayout>

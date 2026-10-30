@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight, Mail, MapPin, Phone, Smartphone } from '@lucide/astro';
+import emblem from '../assets/brand/emblem.png';
+import Leaf from './Leaf.astro';
+import { site, fullAddress, mapLinks } from '../data/site';
+import { url } from '../lib/url';
+
+const links = [
+  { label: 'About the school', href: '/about/' },
+  { label: 'Admissions', href: '/admissions/' },
+  { label: 'School life', href: '/school-life/' },
+  { label: 'Achievements', href: '/achievements/' },
+  { label: 'In the news', href: '/media/' },
+  { label: 'School magazine', href: '/magazine/' },
+  { label: 'Contact & location', href: '/contact/' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="relative overflow-hidden bg-forest-950 text-leaf-100">
+  <Leaf class="pointer-events-none absolute -right-10 -bottom-16 w-72 rotate-[24deg] text-white/[0.04]" />
+  <div class="container-page relative grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <a href={url('/')} class="inline-flex items-center gap-3">
+        <span class="grid size-16 place-items-center rounded-full bg-cream">
+          <Image src={emblem} alt="" height={44} densities={[1, 2]} class="h-11 w-auto" />
+        </span>
+        <span class="font-display text-2xl font-semibold text-white">{site.name}</span>
+      </a>
+      <p class="mt-5 max-w-sm text-[0.95rem] leading-relaxed text-leaf-100/80">
+        Established by {site.foundation}. Affiliated to the {site.affiliation} for the ICSE (Class X) and ISC (Class XII)
+        examinations.
+      </p>
+    </div>
+
+    <div class="lg:col-span-3">
+      <h2 class="font-sans text-sm font-bold tracking-[0.14em] text-saffron-300 uppercase">Visit &amp; contact</h2>
+      <ul class="mt-4 space-y-3 text-[0.95rem]">
+        <li>
+          <a href={mapLinks.open} target="_blank" rel="noopener" class="flex gap-2.5 hover:text-white">
+            <MapPin size={18} class="mt-1 shrink-0 text-leaf-400" aria-hidden="true" />
+            <span>{site.foundation},<br />{fullAddress}</span>
+          </a>
+        </li>
+        <li>
+          <a href={site.phone.href} class="flex items-center gap-2.5 hover:text-white">
+            <Phone size={18} class="shrink-0 text-leaf-400" aria-hidden="true" />{site.phone.display}
+          </a>
+        </li>
+        <li>
+          <a href={site.mobile.href} class="flex items-center gap-2.5 hover:text-white">
+            <Smartphone size={18} class="shrink-0 text-leaf-400" aria-hidden="true" />{site.mobile.display}
+          </a>
+        </li>
+        <li>
+          <a href={`mailto:${site.email}`} class="flex items-center gap-2.5 break-all hover:text-white">
+            <Mail size={18} class="shrink-0 text-leaf-400" aria-hidden="true" />{site.email}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <nav aria-label="Footer" class="lg:col-span-2">
+      <h2 class="font-sans text-sm font-bold tracking-[0.14em] text-saffron-300 uppercase">Explore</h2>
+      <ul class="mt-4 space-y-2 text-[0.95rem]">
+        {
+          links.map((link) => (
+            <li>
+              <a href={url(link.href)} class="hover:text-white hover:underline">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="lg:col-span-3">
+      <h2 class="font-sans text-sm font-bold tracking-[0.14em] text-saffron-300 uppercase">Office hours</h2>
+      <dl class="mt-4 space-y-2 text-[0.95rem]">
+        {
+          site.officeTimings.map((t) => (
+            <div>
+              <dt class="text-leaf-100/70">{t.label}</dt>
+              <dd class="font-semibold text-white">{t.time}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <a href={site.admissions.formUrl} target="_blank" rel="noopener" class="btn btn-primary mt-6">
+        {site.admissions.open ? `Apply for ${site.admissions.year}` : 'Admission form'}
+        <ArrowUpRight size={16} aria-hidden="true" />
+        <span class="sr-only">(opens in a new tab)</span>
+      </a>
+    </div>
+  </div>
+  <div class="relative border-t border-white/10">
+    <div class="container-page flex flex-col gap-2 py-5 text-sm text-leaf-100/70 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name} · {site.foundation}</p>
+      <p>
+        <a href={site.magazine.url} target="_blank" rel="noopener" class="hover:text-white hover:underline">The Grove School Magazine ↗</a>
+      </p>
+    </div>
+  </div>
+</footer>

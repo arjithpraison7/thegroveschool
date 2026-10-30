@@ -1,0 +1,129 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { ArrowUpRight, Clock, Globe, Mail, MapPin, Navigation, Phone, Smartphone } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Lightbox from '../components/Lightbox.astro';
+import routeMap from '../assets/photos/route-map.jpg';
+import { site, fullAddress, mapLinks } from '../data/site';
+
+const routeMapFull = await getImage({ src: routeMap, format: 'webp' });
+---
+
+<BaseLayout
+  title="Contact & Location"
+  description={`Contact The Grove School: ${fullAddress}. Phone ${site.phone.display}, email ${site.email}.`}
+>
+  <PageHero
+    title="Contact Us"
+    eyebrow="Get in touch"
+    intro={`Call or email the school office, or visit us at ${site.address.street}, ${site.address.locality}.`}
+  />
+
+  <section class="container-page grid gap-6 py-14 md:py-20 lg:grid-cols-3">
+    <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)] lg:col-span-2">
+      <p class="eyebrow">{site.principal.title}</p>
+      <h2 class="mt-1 text-3xl font-semibold">{site.principal.name}</h2>
+      <ul class="mt-6 grid gap-5 sm:grid-cols-2">
+        <li class="flex gap-3">
+          <MapPin size={20} class="mt-1 shrink-0 text-leaf-600" aria-hidden="true" />
+          <address class="leading-relaxed not-italic">
+            <strong class="text-forest-900">{site.name}</strong><br />
+            {site.foundation}<br />
+            {site.address.street}, {site.address.locality},<br />
+            {site.address.city} – {site.address.postalCode}
+          </address>
+        </li>
+        <li>
+          <ul class="space-y-3">
+            <li>
+              <a href={site.phone.href} class="flex items-center gap-3 font-semibold hover:text-leaf-800">
+                <Phone size={20} class="shrink-0 text-leaf-600" aria-hidden="true" /><span class="sr-only">Phone:</span>{site.phone.display}
+              </a>
+            </li>
+            <li>
+              <a href={site.mobile.href} class="flex items-center gap-3 font-semibold hover:text-leaf-800">
+                <Smartphone size={20} class="shrink-0 text-leaf-600" aria-hidden="true" /><span class="sr-only">Mobile:</span>{site.mobile.display}
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${site.email}`} class="flex items-center gap-3 font-semibold break-all hover:text-leaf-800">
+                <Mail size={20} class="shrink-0 text-leaf-600" aria-hidden="true" /><span class="sr-only">Email:</span>{site.email}
+              </a>
+            </li>
+            <li>
+              <a href={site.magazine.url} target="_blank" rel="noopener" class="flex items-center gap-3 hover:text-leaf-800">
+                <Globe size={20} class="shrink-0 text-leaf-600" aria-hidden="true" />E-magazine website
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+
+    <article class="rounded-[1.5rem] border border-line bg-paper p-7 shadow-[var(--shadow-card)]">
+      <h2 class="flex items-center gap-2 text-2xl font-semibold"><Clock size={22} class="text-leaf-600" aria-hidden="true" /> Office timings</h2>
+      <dl class="mt-5 space-y-3">
+        {
+          site.officeTimings.map((t) => (
+            <div>
+              <dt class="text-sm text-muted">{t.label}</dt>
+              <dd class="font-semibold">{t.time}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <h3 class="mt-6 text-lg font-semibold">Holidays</h3>
+      <p class="mt-1 text-[0.95rem] leading-relaxed text-muted">
+        Sundays, national holidays and festival holidays as mentioned in the school diary.
+      </p>
+    </article>
+  </section>
+
+  <section id="location" class="border-t border-line bg-sand/60 py-14 md:py-20" aria-labelledby="location-heading">
+    <div class="container-page">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow">Location</p>
+          <h2 id="location-heading" class="mt-2 text-4xl font-semibold">How to reach us</h2>
+          <p class="mt-3 text-lg text-muted">{fullAddress}</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href={mapLinks.directions} target="_blank" rel="noopener" class="btn btn-green">
+            <Navigation size={17} aria-hidden="true" /> Get directions
+            <span class="sr-only">(opens Google Maps in a new tab)</span>
+          </a>
+          <a href={mapLinks.open} target="_blank" rel="noopener" class="btn btn-outline">
+            Open in Google Maps <ArrowUpRight size={17} aria-hidden="true" />
+            <span class="sr-only">(opens in a new tab)</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-[1fr_22rem]">
+        <iframe
+          src={mapLinks.embed}
+          title="Map showing The Grove School, Eldams Road, Alwarpet"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="h-[26rem] w-full rounded-[1.5rem] border border-line bg-paper shadow-[var(--shadow-card)] lg:h-full lg:min-h-[30rem]"
+        ></iframe>
+        <figure data-gallery>
+          <a href={routeMapFull.src} data-lightbox data-caption="Route map to The Grove School, Eldams Road, Alwarpet" class="block overflow-hidden rounded-[1.5rem] border border-line bg-paper p-3 shadow-[var(--shadow-card)]">
+            <Image
+              src={routeMap}
+              alt="Hand-drawn route map showing The Grove School on Eldams Road, with TTK Road, Anna Salai (Mount Road) and nearby landmarks"
+              widths={[352, 600]}
+              width={600}
+              sizes="(min-width: 64rem) 22rem, 92vw"
+              class="w-full rounded-xl"
+            />
+          </a>
+          <figcaption class="mt-3 text-sm text-muted">Route map: select it to enlarge.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+  <Lightbox />
+</BaseLayout>

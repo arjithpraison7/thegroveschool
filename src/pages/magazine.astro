@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import { ArrowUpRight, BookOpen } from '@lucide/astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import painting1 from '../assets/galleries/arts-culture/02.jpg';
+import painting2 from '../assets/galleries/arts-culture/04.jpg';
+import painting3 from '../assets/galleries/arts-culture/06.jpg';
+import { site } from '../data/site';
+
+const paintings = [
+  { src: painting1, alt: 'Student painting: silhouettes of elephants, a giraffe and an acacia tree against an orange sky' },
+  { src: painting2, alt: 'Student painting: a colourful hornbill perched on a branch' },
+  { src: painting3, alt: 'Student painting: palm trees on a beach with fish swimming in the sea' },
+];
+---
+
+<BaseLayout
+  title="School Magazine"
+  description="The Sacred Grove, the annual magazine of The Grove School, and The Grove School Magazine website."
+>
+  <PageHero
+    title="School Magazine"
+    eyebrow="The Sacred Grove"
+    intro="Students' work is displayed in the school's annual magazine, The Sacred Grove, and on The Grove School Magazine website."
+  />
+
+  <section class="container-page grid items-center gap-12 py-14 md:py-20 lg:grid-cols-2">
+    <div class="rounded-[1.75rem] bg-forest-900 p-8 text-white shadow-[var(--shadow-lift)] md:p-10">
+      <BookOpen size={36} class="text-saffron-300" aria-hidden="true" />
+      <h2 class="mt-5 text-3xl font-semibold text-white sm:text-4xl">Read the magazines online</h2>
+      <p class="mt-4 leading-relaxed text-leaf-100/90">
+        The annual magazines are published on the school's e-magazine website, The Grove School Magazine.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={site.magazine.archiveUrl} target="_blank" rel="noopener" class="btn btn-primary">
+          Annual magazines <ArrowUpRight size={18} aria-hidden="true" />
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+        <a href={site.magazine.url} target="_blank" rel="noopener" class="btn btn-light">
+          Magazine website <ArrowUpRight size={18} aria-hidden="true" />
+          <span class="sr-only">(opens in a new tab)</span>
+        </a>
+      </div>
+    </div>
+
+    <ul class="grid grid-cols-2 gap-4" aria-label="Student artwork">
+      {
+        paintings.map((p, i) => (
+          <li class:list={['overflow-hidden rounded-2xl border-4 border-paper shadow-[var(--shadow-card)]', i === 0 ? 'col-span-2' : i === 1 ? '-rotate-2' : 'rotate-2']}>
+            <Image
+              src={p.src}
+              alt={p.alt}
+              widths={[320, 480, 700]}
+              width={700}
+              sizes={i === 0 ? '(min-width: 64rem) 36rem, 92vw' : '(min-width: 64rem) 18rem, 46vw'}
+              class="aspect-[4/3] w-full object-cover"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { ArrowRight } from '@lucide/astro';
+import { url } from '../lib/url';
+
+interface Props {
+  /** Leave out this page and start with the ones after it (for "more from school life"). */
+  exclude?: string;
+  limit?: number;
+  /** Card title level; use h2 when the cards sit directly under the page's h1. */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { exclude, limit, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const sorted = (await getCollection('schoolLife')).sort((a, b) => a.data.order - b.data.order);
+const start = sorted.findIndex((entry) => entry.id === exclude) + 1;
+const entries = [...sorted.slice(start), ...sorted.slice(0, start)]
+  .filter((entry) => entry.id !== exclude)
+  .slice(0, limit);
+---
+
+<ul class="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+  {
+    entries.map((entry) => (
+      <li>
+        <a
+          href={url(`/school-life/${entry.id}/`)}
+          class="group flex h-full flex-col overflow-hidden rounded-xl border sm:rounded-2xl border-line bg-paper shadow-[var(--shadow-card)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]"
+        >
+          <div class="overflow-hidden bg-sand">
+            <Image
+              src={entry.data.cover}
+              alt=""
+              widths={[360, 540, 720]}
+              width={Math.min(720, entry.data.cover.width)}
+              sizes="(min-width: 76rem) 17rem, (min-width: 64rem) 23vw, 46vw"
+              class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
+            />
+          </div>
+          <div class="flex flex-1 flex-col p-3 sm:p-5">
+            <Heading class="text-base leading-snug font-semibold group-hover:text-leaf-800 sm:text-xl">{entry.data.navTitle ?? entry.data.title}</Heading>
+            <p class="mt-2 hidden flex-1 text-[0.95rem] leading-relaxed text-muted sm:block">{entry.data.summary}</p>
+            <span class="link-arrow mt-4 hidden sm:inline-flex" aria-hidden="true">
+              Explore <ArrowRight size={16} class="transition-transform group-hover:translate-x-1" />
+            </span>
+          </div>
+        </a>
+      </li>
+    ))
+  }
+</ul>

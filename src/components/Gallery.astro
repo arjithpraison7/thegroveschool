@@ -1,0 +1,47 @@
+---
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  photos: ImageMetadata[];
+  /** Fallback description, used as "<alt> (photo 3 of 16)" when a photo has no caption. */
+  alt: string;
+  /** Optional per-photo descriptions, in the same order as `photos`. */
+  captions?: readonly string[];
+  label: string;
+}
+
+const { photos, alt, captions = [], label } = Astro.props;
+
+const items = await Promise.all(
+  photos.map(async (src, i) => {
+    const full = await getImage({ src, width: Math.min(src.width, 1600), format: 'webp', quality: 75 });
+    return { src, full: full.src, alt: captions[i] ?? `${alt} (photo ${i + 1} of ${photos.length})` };
+  }),
+);
+---
+
+<ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4" data-gallery aria-label={label}>
+  {
+    items.map((item) => (
+      <li>
+        <a
+          href={item.full}
+          class="group relative block overflow-hidden rounded-xl bg-sand shadow-[var(--shadow-card)]"
+          data-lightbox
+          data-caption={item.alt}
+        >
+          <Image
+            src={item.src}
+            alt={item.alt}
+            widths={[320, 480, 640]}
+            width={Math.min(640, item.src.width)}
+            sizes="(min-width: 76rem) 17rem, (min-width: 64rem) 23vw, (min-width: 40rem) 31vw, 47vw"
+            class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+          <span class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-black/5 ring-inset" />
+        </a>
+      </li>
+    ))
+  }
+</ul>
